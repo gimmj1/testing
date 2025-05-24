@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>View Attendance</h2>
+
+<form method="GET" action="{{ url_for('view_attendance_page') }}">
+    <label for="session_date_view">Select Session Date to View:</label>
+    <input type="date" id="session_date_view" name="session_date_view" value="{{ request.args.get('session_date_view', '') }}" required>
+    <button type="submit">View Attendance</button>
+</form>
+
+{% if session_date %}
+    <h3>Attendance for Session: {{ session_date }}</h3>
+    {% if attendance_records %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Participant Name</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in attendance_records %}
+                <tr>
+                    <td>{{ record.participant_name }}</td>
+                    <td>{{ record.status }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No attendance records found for this date, or no participants were present/absent.</p>
+    {% endif %}
+{% elif request.args.get('session_date_view') %}
+    <p>No attendance data available for the selected date.</p>
+{% endif %}
+
+<p><a href="{{ url_for('setup_page') }}">Back to Setup</a></p>
+{% endblock %}
