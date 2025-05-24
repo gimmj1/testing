@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Mark Attendance</h2>
+<p>Session Date: {{ session_date }}</p>
+
+<form method="POST" action="{{ url_for('mark_attendance_page') }}">
+    <input type="hidden" name="session_date" value="{{ session_date }}">
+    <table>
+        <thead>
+            <tr>
+                <th>Participant Name</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in participants %}
+            <tr>
+                <td>{{ p.name }}</td>
+                <td>
+                    <label>
+                        <input type="radio" name="status_{{ p.id }}" value="Present" required> Present
+                    </label>
+                    <label>
+                        <input type="radio" name="status_{{ p.id }}" value="Absent" required> Absent
+                    </label>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <br>
+    <button type="submit" name="action" value="save_attendance">Save Attendance</button>
+</form>
+
+<p><a href="{{ url_for('setup_page') }}">Back to Setup</a></p>
+{% endblock %}

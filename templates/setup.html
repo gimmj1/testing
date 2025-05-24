@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Setup Session and Participants</h2>
+
+<form method="POST" action="{{ url_for('setup_page') }}">
+    <div>
+        <label for="session_date">Session Date:</label>
+        <input type="date" id="session_date" name="session_date" value="{{ session.get('session_date', '') }}" required>
+    </div>
+    <hr>
+    <div>
+        <h3>Add New Participant</h3>
+        <label for="participant_name">Participant Name:</label>
+        <input type="text" id="participant_name" name="participant_name">
+        <button type="submit" name="action" value="add_participant">Add Participant</button>
+    </div>
+</form>
+
+<hr>
+
+<h3>Current Participants</h3>
+{% if participants %}
+    <ul>
+        {% for p in participants %}
+        <li>{{ p.name }} {% if p.email %}({{ p.email }}){% endif %}</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No participants added yet.</p>
+{% endif %}
+
+<hr>
+
+<form method="POST" action="{{ url_for('setup_page') }}">
+    {# Ensure session_date is part of this form submission if not already handled by the first form #}
+    {# If the first form's date is the one to use, this hidden input might not be needed if date is already in session #}
+    <input type="hidden" name="session_date" value="{{ request.form.get('session_date', session.get('session_date', '')) }}">
+    <button type="submit" name="action" value="proceed_to_attendance">Mark Attendance for Selected Date</button>
+</form>
+
+{% endblock %}
